@@ -22,7 +22,7 @@ struct TCPlikeHeader {
 const unsigned short TCPLIKE_SEGMENT_MAXLENGTH = 2048;
 const unsigned short TCPLIKE_PAYLOAD_MAXLENGTH = TCPLIKE_SEGMENT_MAXLENGTH - sizeof(TCPlikeHeader);
 const unsigned char TCPLIKE_TIMEOUT = 4;
-const std::chrono::milliseconds TCPLIKE_TIMEOUT_DURATION = std::chrono::milliseconds(4000);
+const std::chrono::milliseconds TCPLIKE_TIMEOUT_DURATION = std::chrono::milliseconds(1500);
 const unsigned char TCPLIKE_RETRANSMIT_ATTEMPTS = 3;
 
 class TCPlikePeer {

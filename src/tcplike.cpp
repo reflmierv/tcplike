@@ -1,5 +1,4 @@
 #include "tcplike.hpp"
-#include <bits/chrono.h>
 #include <chrono>
 #include <cstdint>
 #include <thread>
@@ -17,7 +16,6 @@ int TCPlikePeer::send(const void * data, std::size_t len){
 
     const uint8_t * dataPtr = reinterpret_cast<const uint8_t *>(data);
     std::size_t payloadLen = TCPLIKE_PAYLOAD_MAXLENGTH;
-    //std::size_t payloadLen = (len < TCPLIKE_PAYLOAD_MAXLENGTH) ? len : TCPLIKE_PAYLOAD_MAXLENGTH;
     std::size_t bytesLeft = len;
     std::memcpy(sendPayloadPtr, dataPtr, payloadLen);
 
@@ -60,7 +58,6 @@ int TCPlikePeer::send(const void * data, std::size_t len){
             }
         }
         else {
-            isConnectionEstablished = false;
             transmitRst(connectionData.ipAddr, connectionData.port);
             return -2;
         }
@@ -78,7 +75,6 @@ int TCPlikePeer::receive(void * data, std::size_t len){
     uint32_t sequenceNumber = 0;
 
     uint8_t * dataPtr = reinterpret_cast<uint8_t *>(data);
-    //std::size_t payloadLen = (len < TCPLIKE_PAYLOAD_MAXLENGTH) ? len : TCPLIKE_PAYLOAD_MAXLENGTH;
     std::size_t payloadLen = TCPLIKE_PAYLOAD_MAXLENGTH;
     std::size_t bytesLeft = len;
 
@@ -92,13 +88,11 @@ int TCPlikePeer::receive(void * data, std::size_t len){
             if(bytesLeft >= payloadLen){
                 bytesLeft -= payloadLen;
                 dataPtr += payloadLen;
-                //payloadLen = (bytesLeft < TCPLIKE_PAYLOAD_MAXLENGTH) ? bytesLeft : TCPLIKE_PAYLOAD_MAXLENGTH;
                 payloadLen = TCPLIKE_PAYLOAD_MAXLENGTH;
                 sequenceNumber++;
             }
         }
         else {
-            isConnectionEstablished = false;
             transmitRst(connectionData.ipAddr, connectionData.port);
             return -2;
         }
