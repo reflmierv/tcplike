@@ -6,10 +6,15 @@
 
 
 int main(int argc, char ** argv){
+    if(argc != 2){
+        std::cout << "Usage: " << argv[0] << " PORT" << std::endl;
+        return -1;
+    }
+    uint16_t port = std::stoi(argv[1]);
     setSignalHandler();
     
     uint8_t buffer[4096];
-    TCPlikeServer server(7755);
+    TCPlikeServer server(port);
     server.accept();
     std::size_t bytesLeft = sizeof(buffer) - 1;
     uint8_t * dataPtr = buffer;
