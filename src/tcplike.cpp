@@ -1,11 +1,5 @@
 #include "tcplike.hpp"
-#include <chrono>
-#include <cstdint>
-#include <thread>
 #include <cstring>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <iostream>
 
 int TCPlikePeer::send(const void * data, std::size_t len){
     if(!isConnectionEstablished){
@@ -46,7 +40,6 @@ int TCPlikePeer::send(const void * data, std::size_t len){
             if(bytesLeft >= payloadLen){
                 bytesLeft -= payloadLen;
                 dataPtr += payloadLen;
-                //payloadLen = (bytesLeft < TCPLIKE_PAYLOAD_MAXLENGTH) ? bytesLeft : TCPLIKE_PAYLOAD_MAXLENGTH;
                 payloadLen = TCPLIKE_PAYLOAD_MAXLENGTH;
                 sequenceNumber++;
                 std::memset(sendPayloadPtr, 0, TCPLIKE_PAYLOAD_MAXLENGTH);
@@ -111,7 +104,6 @@ int TCPlikeClient::connect(uint32_t ipAddr, uint16_t port){
     bool synAckReceived = false;
     for(int i = 0; i < TCPLIKE_RETRANSMIT_ATTEMPTS; ++i){
         transmitSyn(ipAddr, port);
-        //wait(isWaitFinished);
         const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
         std::chrono::time_point<std::chrono::steady_clock> now;
         std::chrono::milliseconds duration;
@@ -127,7 +119,6 @@ int TCPlikeClient::connect(uint32_t ipAddr, uint16_t port){
             duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
         } while(duration <= TCPLIKE_TIMEOUT_DURATION && !isFinished);
         isFinished = false;
-        //} while(!isWaitFinished);
     }
     
     if(synAckReceived) {
@@ -276,7 +267,6 @@ int TCPlikePeer::receiveControlSegment(TCPlikeType type, uint32_t ipAddr, uint16
     int status;
     bool isFinished = false;
     bool isValid = false;
-    //wait(isWaitFinished);
     const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> now;
     std::chrono::milliseconds duration;

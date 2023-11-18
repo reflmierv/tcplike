@@ -1,11 +1,9 @@
 #include "udppeer.hpp"
-#include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 #include <cstring>
-#include <iostream>
 
 UDPPeer::UDPPeer(uint16_t port){
     this->sock = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
